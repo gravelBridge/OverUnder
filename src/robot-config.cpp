@@ -20,7 +20,8 @@ motor Slap = motor(PORT7, ratio36_1, false);
 limit LimitSwitch = limit(Brain.ThreeWirePort.A);
 motor Intake = motor(PORT21, ratio18_1, false);
 motor Clocker = motor(PORT18, ratio36_1, true);
-digital_out Intake_Lift = digital_out(Brain.ThreeWirePort.C);
+digital_out Intake_Lift = digital_out(Brain.ThreeWirePort.G);
+digital_out Doinker = digital_out(Brain.ThreeWirePort.H);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

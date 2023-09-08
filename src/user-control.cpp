@@ -16,20 +16,37 @@ void run_slapper() {
 
 void run_intake_out() {
 
-  Intake_Lift.set(!Intake_Lift.value());
-
-  while(Controller1.ButtonL1.pressing()) {
-    Intake.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+  if(!Controller1.ButtonR2.pressing()) {
+    Intake_Lift.set(!Intake_Lift.value());
   }
+  while(Controller1.ButtonL1.pressing()) {
+    if(Controller1.ButtonR2.pressing()) {
+      Clocker.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+    }
+    else{
+      Clocker.stop();
+      Intake.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+    }
+  }
+  Clocker.stop();
   Intake.stop();
   
-  Intake_Lift.set(!Intake_Lift.value());
+  if(!Controller1.ButtonR2.pressing()) {
+    Intake_Lift.set(!Intake_Lift.value());
+  }
 }
 
 void run_intake_in() {
   while(Controller1.ButtonL2.pressing()) {
-    Intake.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+    if(Controller1.ButtonR2.pressing()) {
+      Clocker.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+    }
+    else {
+      Clocker.stop();
+      Intake.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+    }
   }
+  Clocker.stop();
   Intake.stop();
 }
 
@@ -49,4 +66,17 @@ void run_clocker_down() {
 
 void hold_ball() {
   Brain.Screen.print("Pressed");
+}
+
+void doinker() {
+  Doinker.set(!Doinker.value());
+}
+
+void toggleSlap() {
+  if(Slap.isSpinning()) {
+    Slap.stop();
+  }
+  else {
+    Slap.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+  }
 }

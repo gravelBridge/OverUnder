@@ -16,6 +16,7 @@ extern limit LimitSwitch;
 extern motor Intake;
 extern motor Clocker;
 extern digital_out Intake_Lift;
+extern digital_out Doinker;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

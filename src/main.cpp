@@ -16,7 +16,8 @@
 // LimitSwitch          limit         A               
 // Intake               motor         21              
 // Clocker              motor         18              
-// Intake_Lift          digital_out   C               
+// Intake_Lift          digital_out   G               
+// Doinker              digital_out   H               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 using namespace vex;
@@ -126,10 +127,9 @@ void pre_auton(void) {
   R1.setBrake(brake);
   R2.setBrake(brake);
   R3.setBrake(brake);
+  Clocker.setBrake(brake);
 
   while(auto_started == false){            //Changing the names below will only change their names on the
-    Brain.Screen.print("boo!");
-    return;            //brain screen for auton selection.
     switch(current_auton_selection){       //Tap the brain screen to cycle through autons.
       case 0:
         Brain.Screen.printAt(50, 50, "Drive Test");
@@ -168,10 +168,7 @@ void pre_auton(void) {
 
 void autonomous(void) {
   auto_started = true;
-  Brain.Screen.print("In Auton apparently lolol samuelolol");
-  current_auton_selection = 4;
-  full_test();
-  return;
+  current_auton_selection = 0;
   switch(current_auton_selection){  
     case 0:
       drive_test(); //This is the default auton, if you don't select from the brain.
@@ -218,6 +215,8 @@ void usercontrol(void) {
   Controller1.ButtonL1.pressed(run_intake_out);
   Controller1.ButtonX.pressed(run_clocker_down);
   Controller1.ButtonB.pressed(run_clocker_up);
+  Controller1.ButtonUp.pressed(doinker);
+  Controller1.ButtonY.pressed(toggleSlap);
   
   while (1) {
     // This is the main execution loop for the user control program.
@@ -263,7 +262,6 @@ int main() {
   Competition.drivercontrol(usercontrol);
 
   // Run the pre-autonomous function.
-  Brain.Screen.print("PRINT BRO");
   pre_auton();
   
   // Prevent main from exiting with an infinite loop.

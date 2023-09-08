@@ -11,3 +11,7 @@ void run_clocker_up();
 void run_clocker_down();
 
 void hold_ball();
+
+void doinker();
+
+void toggleSlap();
