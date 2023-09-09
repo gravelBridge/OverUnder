@@ -4,9 +4,9 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// L1                   motor         9               
+// L1                   motor         10              
 // L2                   motor         8               
-// L3                   motor         10              
+// L3                   motor         9               
 // R1                   motor         16              
 // R2                   motor         14              
 // R3                   motor         17              
@@ -16,8 +16,8 @@
 // LimitSwitch          limit         A               
 // Intake               motor         21              
 // Clocker              motor         18              
-// Intake_Lift          digital_out   G               
-// Doinker              digital_out   H               
+// Intake_Lift          digital_out   H               
+// Doinker              digital_out   G               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 using namespace vex;
@@ -52,10 +52,10 @@ ZERO_TRACKER_ODOM,
 //You will input whatever motor names you chose when you configured your robot using the sidebar configurer, they don't have to be "Motor1" and "Motor2".
 
 //Left Motors:
-motor_group(L1,L2,L3),
+motor_group(L1,L3),
 
 //Right Motors:
-motor_group(R1,R2,R3),
+motor_group(R1,R3),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
 PORT15,
@@ -129,6 +129,8 @@ void pre_auton(void) {
   R3.setBrake(brake);
   Clocker.setBrake(brake);
 
+  //return;
+
   while(auto_started == false){            //Changing the names below will only change their names on the
     switch(current_auton_selection){       //Tap the brain screen to cycle through autons.
       case 0:
@@ -169,6 +171,8 @@ void pre_auton(void) {
 void autonomous(void) {
   auto_started = true;
   current_auton_selection = 0;
+  //drive_test();
+  //return;
   switch(current_auton_selection){  
     case 0:
       drive_test(); //This is the default auton, if you don't select from the brain.
@@ -247,7 +251,6 @@ void usercontrol(void) {
     //Replace this line with chassis.control_tank(); for tank drive 
     //or chassis.control_holonomic(); for holo drive.
     //chassis.control_arcade();
-
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
@@ -264,6 +267,7 @@ int main() {
   // Run the pre-autonomous function.
   pre_auton();
   
+  //autonomous();
   // Prevent main from exiting with an infinite loop.
   while (true) {
     wait(100, msec);

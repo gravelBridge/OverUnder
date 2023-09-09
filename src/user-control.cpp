@@ -1,6 +1,8 @@
 #include "vex.h"
 using namespace vex;
 
+bool slapperToggled = false;
+
 void run_slapper() {
 
   while(!LimitSwitch.pressing()) {
@@ -73,10 +75,12 @@ void doinker() {
 }
 
 void toggleSlap() {
-  if(Slap.isSpinning()) {
+  if(slapperToggled) {
     Slap.stop();
+    slapperToggled = false;
   }
   else {
     Slap.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+    slapperToggled = true;
   }
 }
