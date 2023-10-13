@@ -1,7 +1,12 @@
 #include "vex.h"
+#include "auton_funcs.h"
+#include "user-control.h"
 
-void default_constants(){
-  chassis.set_drive_constants(10, 1.5, 0, 10, 0);
+float driveToInches = 1.06;
+
+void default_constants()
+{
+  chassis.set_drive_constants(12, 1.5, 0, 10, 0);
   chassis.set_heading_constants(6, .4, 0, 1, 0);
   chassis.set_turn_constants(12, .4, .03, 3, 15);
   chassis.set_swing_constants(12, .3, .001, 2, 15);
@@ -10,17 +15,24 @@ void default_constants(){
   chassis.set_swing_exit_conditions(1, 300, 3000);
 }
 
-void odom_constants(){
+void odom_constants()
+{
   default_constants();
-  chassis.drive_max_voltage = 8;
+  chassis.drive_max_voltage = 999;
   chassis.drive_settle_error = 3;
 }
 
-void drive_test(){
-  chassis.turn_to_angle(-1);
+void drive_test()
+{
+  default_constants();
+  chassis.drive_distance(30 * driveToInches);
+  chassis.turn_to_angle(180);
+  chassis.drive_distance(30 * driveToInches);
+  chassis.turn_to_angle(0);
 }
 
-void turn_test(){
+void turn_test()
+{
   chassis.turn_to_angle(5);
   chassis.turn_to_angle(30);
   chassis.turn_to_angle(90);
@@ -28,47 +40,112 @@ void turn_test(){
   chassis.turn_to_angle(0);
 }
 
-void swing_test(){
+void swing_test()
+{
   chassis.left_swing_to_angle(90);
   chassis.right_swing_to_angle(0);
 }
 
-void full_test(){
+void full_test()
+{
   chassis.drive_distance(10, 0);
-  //chassis.turn_to_angle(-45);
-  //chassis.drive_distance(-36);
-  //chassis.right_swing_to_angle(-90);
-  //chassis.drive_distance(24);
-  //chassis.turn_to_angle(0);
+  // chassis.turn_to_angle(-45);
+  // chassis.drive_distance(-36);
+  // chassis.right_swing_to_angle(-90);
+  // chassis.drive_distance(24);
+  // chassis.turn_to_angle(0);
 }
 
-void odom_test(){
+void odom_test()
+{
   chassis.set_coordinates(0, 0, 0);
-  while(1){
+  while (1)
+  {
     Brain.Screen.clearScreen();
-    Brain.Screen.printAt(0,50, "X: %f", chassis.get_X_position());
-    Brain.Screen.printAt(0,70, "Y: %f", chassis.get_Y_position());
-    Brain.Screen.printAt(0,90, "Heading: %f", chassis.get_absolute_heading());
-    Brain.Screen.printAt(0,110, "ForwardTracker: %f", chassis.get_ForwardTracker_position());
-    Brain.Screen.printAt(0,130, "SidewaysTracker: %f", chassis.get_SidewaysTracker_position());
+    Brain.Screen.printAt(0, 50, "X: %f", chassis.get_X_position());
+    Brain.Screen.printAt(0, 70, "Y: %f", chassis.get_Y_position());
+    Brain.Screen.printAt(0, 90, "Heading: %f", chassis.get_absolute_heading());
+    Brain.Screen.printAt(0, 110, "ForwardTracker: %f", chassis.get_ForwardTracker_position());
+    Brain.Screen.printAt(0, 130, "SidewaysTracker: %f", chassis.get_SidewaysTracker_position());
     task::sleep(20);
   }
 }
 
-void tank_odom_test(){
+void tank_odom_test()
+{
   odom_constants();
   chassis.set_coordinates(0, 0, 0);
   chassis.turn_to_point(-5, -5);
-  chassis.drive_to_point(-5,-5);
-  chassis.drive_to_point(0,0);
+  chassis.drive_to_point(-5, -5);
+  chassis.drive_to_point(0, 0);
   chassis.turn_to_angle(0);
 }
 
-void holonomic_odom_test(){
+void holonomic_odom_test()
+{
   odom_constants();
   chassis.set_coordinates(0, 0, 0);
   chassis.holonomic_drive_to_point(0, 18, 90);
   chassis.holonomic_drive_to_point(18, 0, 180);
   chassis.holonomic_drive_to_point(0, 18, 270);
   chassis.holonomic_drive_to_point(0, 0, 0);
+}
+
+void winPointGoalSide()
+{
+  default_constants();
+  lift_clocker();
+  intake_in();
+  task::sleep(0.8);
+  chassis.drive_distance(6, 0, 10, 10);
+  chassis.set_drive_constants(10000, 1.5, 0, 10, 0);
+  chassis.drive_distance(-38);
+  chassis.turn_to_angle(-45);
+  chassis.drive_distance(-25);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(-12);
+}
+
+void programmingSkills()
+{
+  /*
+  default_constants();
+  long slapstart = vex::timer::system();
+  lift_clocker_skills();
+  task::sleep(1500);
+  toggleSlap();
+  while (vex::timer::system() - slapstart < 10000)
+  {
+    if (vex::timer::system() - slapstart > 8000)
+    {
+      intake_out();
+    }
+    task::sleep(500);
+  }
+  */
+  toggleSlap();
+  close_clocker_skills();
+  long start = vex::timer::system();
+  chassis.set_heading(0);
+  chassis.turn_to_angle(-34);
+  chassis.drive_distance(74 * driveToInches);
+  intake_stop();
+  chassis.turn_to_angle(-120);
+  chassis.drive_distance(-21 * driveToInches);
+  chassis.set_heading(0);
+  chassis.turn_to_angle(90);
+  chassis.drive_distance(-18 * driveToInches);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(-23.5 * driveToInches);
+  chassis.set_heading(0);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(-20 * driveToInches);
+  chassis.drive_distance(20 * driveToInches);
+  chassis.turn_to_angle(0);
+  chassis.drive_distance(-20 * driveToInches);
+  chassis.turn_to_angle(-90);
+  chassis.drive_distance(-23.5 * driveToInches);
+  long end = vex::timer::system();
+  long time = (end - start) / 1000;
+  printf("Time: %d\n", time);
 }
